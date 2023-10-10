@@ -1,0 +1,45 @@
+@startuml asd
+
+!define primary_key(x) <b><color:#b8861b><&key></color> x</b>
+!define foreign_key(x) <color:#aaaaaa><&key></color> x
+!define column(x) <color:#00ff00><&media-record></color> x
+!define table(x) entity x << (T, white) >>
+
+table( bfc_sources ) {
+  primary_key( ID ): BIGINT 
+}
+
+table( DATASET_X_Axis_Y_Axis ) {
+  foreign_key( BFC_SOURCE_ID ): VARCHAR(255)
+  column( BFC_TIMESTAMP ): DATETIME(6)
+  column( DATAPOINT_X_Speed ): DOUBLE
+  column( DATAPOINT_X_Position ): DOUBLE
+  column( DATAPOINT_X_Current ): DOUBLE
+  column( DATAPOINT_X_MotorTemp ): DOUBLE
+  column( DATAPOINT_X_Torque ): DOUBLE
+  column( DATAPOINT_Y_Speed ): DOUBLE
+  column( DATAPOINT_Y_Position ): DOUBLE
+  column( DATAPOINT_Y_Current ): DOUBLE
+  column( DATAPOINT_Y_MotorTemp ): DOUBLE
+  column( DATAPOINT_Y_Torque ): DOUBLE
+}
+
+table( DATASET_A11_Axis_A1_Axis ) {
+  foreign_key( BFC_SOURCE_ID ): VARCHAR(255)
+  column( BFC_TIMESTAMP ): DATETIME(6)
+  column( DATAPOINT_A11_Speed ): DOUBLE
+  column( DATAPOINT_A11_Position ): DOUBLE
+  column( DATAPOINT_A11_Current ): DOUBLE
+  column( DATAPOINT_A11_MotorTemp ): DOUBLE
+  column( DATAPOINT_A11_Torque ): DOUBLE
+  column( DATAPOINT_A1_Speed ): DOUBLE
+  column( DATAPOINT_A1_Position ): DOUBLE
+  column( DATAPOINT_A1_Current ): DOUBLE
+  column( DATAPOINT_A1_MotorTemp ): DOUBLE
+  column( DATAPOINT_A1_Torque ): DOUBLE
+}
+
+bfc_sources ||--o{ DATASET_X_Axis_Y_Axis
+bfc_sources ||--o{ DATASET_A11_Axis_A1_Axis
+
+@enduml

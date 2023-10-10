@@ -1,0 +1,28 @@
+@startuml asd
+
+!define primary_key(x) <b><color:#b8861b><&key></color> x</b>
+!define foreign_key(x) <color:#aaaaaa><&key></color> x
+!define column(x) <color:#00ff00><&media-record></color> x
+!define table(x) entity x << (T, white) >>
+
+table( bfc_sources ) {
+  primary_key( ID ): BIGINT 
+}
+
+table( data_x ) {
+  foreign_key( BFC_SOURCE_ID ): VARCHAR(255) 
+}
+
+table( data_y ) {
+  foreign_key( BFC_SOURCE_ID ): VARCHAR(255) 
+}
+
+table( data_z ) {
+  foreign_key( BFC_SOURCE_ID ): VARCHAR(255) 
+}
+
+bfc_sources ||--o{ data_x
+bfc_sources ||--o{ data_y
+bfc_sources ||--o{ data_z
+
+@enduml

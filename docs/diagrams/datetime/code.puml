@@ -1,0 +1,13 @@
+@startuml asd
+
+!define primary_key(x) <b><color:#b8861b><&key></color> x</b>
+!define foreign_key(x) <color:#aaaaaa><&key></color> x
+!define column(x) <color:#00ff00><&media-record></color> x
+!define table(x) entity x << (T, white) >>
+
+table( DATASET_X_Axis_Y_Axis ) {
+  column( BFC_TIMESTAMP ): DATETIME(6)
+}
+
+
+@enduml

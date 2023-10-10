@@ -1,0 +1,47 @@
+//Flexible stored procedure that selects the primary chunk from the email from DAF, with a 
+//SINGLE PARAM. @idList that holds all sources id's in case of calling 30 machines in a row
+//you can declare it - DECLARE @idList VARCHAR(MAX) = '<id's param>'; and fire the SP
+
+CREATE PROCEDURE GetSourcesByIds
+    @idList VARCHAR(MAX)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    DECLARE @sql NVARCHAR(MAX)
+
+    SET @sql = N'
+    SELECT *
+    INTO #sourcesTable
+    FROM bfc_sources
+    WHERE ID IN (' + @idList + ')'
+
+    EXEC sp_executesql @sql
+END
+GO
+
+DECLARE @idList VARCHAR(MAX) = '<id's params separated by commas>' 
+
+EXEC GetSourcesByIds @idList
+
+WITH sources as (SELECT * FROM #sourcesTable),
+
+base AS (
+  SELECT
+    $__timeGroup(data.BFC_TIMESTAMP, 180s) as time,
+    sources.BFC_CLIENT_ID as machine,
+    AVG(DATAPOINT_A1_Speed) as A1
+  FROM
+    DATASET_A11_Axis_A1_Axis as data
+    INNER JOIN sources on data.BFC_SOURCE_ID = sources.ID
+  WHERE
+    $__timeFilter(data.BFC_TIMESTAMP) and
+    data.BFC_SOURCE_ID IN (SELECT ID FROM sources)
+  GROUP BY time, machine
+)
+
+SELECT * FROM base
+ORDER BY time
+
+
+

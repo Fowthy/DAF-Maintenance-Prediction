@@ -1,0 +1,36 @@
+@startuml C4_Diagram
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+!define MATERIAL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/material
+!include DEVICONS/mysql.puml
+!include FONTAWESOME/chart_line.puml
+!include FONTAWESOME/broadcast_tower.puml
+!include MATERIAL/router.puml
+
+LAYOUT_LEFT_RIGHT()
+
+Person(user, "DAF Employee")
+System_Boundary(c1, "Machine Monitoring System") {
+    Container(user_interface, "User interface", "Grafana", "Displays all graphs.", $sprite="chart_line")
+    ContainerDb(mysql_db, "Database", "MySQL", "Holds all machine sensor information.", $sprite="mysql")
+    System(gateway, "Gateway", "Reads sensors and inserts data into the database.", $sprite="router")
+    Boundary(factory_machine1, "Machine",) {
+        Boundary(axis, "Axis") {
+            Component(sensor_temperature, "Temperature sensor", $sprite="broadcast_tower")
+            Component(sensor_current, "Current sensor", $sprite="broadcast_tower")
+            Component(sensor_speed, "Speed sensor", $sprite="broadcast_tower")
+            Component(sensor_torue, "Torque sensor", $sprite="broadcast_tower")
+            Component(sensor_position, "Position sensor", $sprite="broadcast_tower")
+        }
+    }
+}
+
+
+Rel(user, user_interface, "Uses", "Web browser")
+Rel(user_interface, mysql_db, "Reads")
+Rel_Left(gateway, mysql_db, "Writes")
+Rel(gateway, factory_machine1, "Reads")
+@enduml
